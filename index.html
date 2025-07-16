@@ -16,16 +16,23 @@
     document.head.appendChild(script);
   }
   
+  // More aggressive deferring on mobile devices
+  const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  const delay = isMobile ? 3000 : 1000; // 3 seconds on mobile, 1 second on desktop
+  
   // Load GA after page load or on first user interaction
   if (document.readyState === 'complete') {
-    setTimeout(loadGoogleAnalytics, 1000);
+    setTimeout(loadGoogleAnalytics, delay);
   } else {
-    window.addEventListener('load', () => setTimeout(loadGoogleAnalytics, 1000));
+    window.addEventListener('load', () => setTimeout(loadGoogleAnalytics, delay));
   }
   
-  // Load on first user interaction
-  ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'].forEach(function(event) {
-    document.addEventListener(event, loadGoogleAnalytics, { once: true, passive: true });
+  // Load on first user interaction (but with delay on mobile)
+  const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+  events.forEach(function(event) {
+    document.addEventListener(event, function() {
+      setTimeout(loadGoogleAnalytics, isMobile ? 1000 : 0);
+    }, { once: true, passive: true });
   });
 </script>
         <!-- Primary Meta Tags -->
@@ -182,6 +189,20 @@
             .hero-content h1{font-size:clamp(2.5rem,5vw,4rem);font-weight:700;line-height:1.3;margin-bottom:1rem;background:linear-gradient(135deg,#6c63ff,#00d4ff);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
             .nav-links{display:flex;list-style:none;gap:30px;align-items:center}
             .logo{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#6c63ff,#00d4ff);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-decoration:none;display:flex;align-items:center;gap:10px}
+            /* Mobile-specific optimizations */
+            @media (max-width: 768px) {
+                .floating-element{display:none !important}
+                .hero-background{display:none !important}
+                .hero-content h1{font-size:clamp(1.8rem,6vw,2.5rem) !important}
+                .hero{padding-top:60px;min-height:80vh}
+                #header{padding:10px 0}
+                .hero-content{padding:0 15px}
+                .btn{min-height:44px;font-size:0.9rem}
+            }
+            @media (max-width: 480px) {
+                .hero-content h1{font-size:1.6rem !important;line-height:1.2 !important}
+                .hero{min-height:70vh}
+            }
         </style>
         
         <!-- Stylesheets -->
