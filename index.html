@@ -134,8 +134,14 @@
 
         <!-- Critical inline CSS to prevent white flash -->
         <style>
-            html,body{background:#0a0a0a;color:#e0e6ed;margin:0;padding:0;overflow-x:hidden}
+            html,body{background:#0a0a0a;color:#e0e6ed;margin:0;padding:0;overflow-x:hidden;font-display:swap}
             .loader{position:fixed;top:0;left:0;width:100%;height:100vh;background:#0a0a0a;display:flex;align-items:center;justify-content:center;z-index:9999}
+            /* Critical path optimization */
+            .hero-content h1{font-display:swap;will-change:transform}
+            img{max-width:100%;height:auto;display:block}
+            /* Reduce layout shift */
+            .project-image{aspect-ratio:16/10;background:#1a1a2e}
+            .floating-element{will-change:transform;transform:translateZ(0)}
         </style>
         
         <!-- Stylesheets -->
@@ -775,6 +781,9 @@
                             src="images/Hranalytics.png"
                             alt="HR Analytics Dashboard showing employee attrition metrics"
                             loading="lazy"
+                            decoding="async"
+                            width="340"
+                            height="190"
                             itemprop="image"
                         />
                         <div class="project-overlay">
@@ -836,6 +845,9 @@
                             src="images/AmazonSales.png"
                             alt="Amazon Sales Dashboard showing regional sales performance"
                             loading="lazy"
+                            decoding="async"
+                            width="340"
+                            height="191"
                             itemprop="image"
                         />
                         <div class="project-overlay">
