@@ -189,6 +189,10 @@
             .hero-content h1{font-size:clamp(2.5rem,5vw,4rem);font-weight:700;line-height:1.3;margin-bottom:1rem;background:linear-gradient(135deg,#6c63ff,#00d4ff);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
             .nav-links{display:flex;list-style:none;gap:30px;align-items:center}
             .logo{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#6c63ff,#00d4ff);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-decoration:none;display:flex;align-items:center;gap:10px}
+            /* Form styling */
+            .required {color: red;}
+            .form-row {display: grid;grid-template-columns: 1fr 1fr;gap: 20px;width: 100%;margin-bottom: 25px;}
+            .form-group.half-width {margin-bottom: 0;}
             /* Mobile-specific optimizations */
             @media (max-width: 768px) {
                 .floating-element{display:none !important}
@@ -198,6 +202,8 @@
                 #header{padding:10px 0}
                 .hero-content{padding:0 15px}
                 .btn{min-height:44px;font-size:0.9rem}
+                .form-row {grid-template-columns: 1fr;gap: 15px;margin-bottom: 20px;}
+                .form-group.half-width {margin-bottom: 20px;}
             }
             @media (max-width: 480px) {
                 .hero-content h1{font-size:1.6rem !important;line-height:1.2 !important}
@@ -1402,7 +1408,7 @@
                         />
 
                         <div class="form-group">
-                            <label for="name">Your Name</label>
+                            <label for="name">Your Name <span class="required">*</span></label>
                             <input
                                 type="text"
                                 id="name"
@@ -1415,7 +1421,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="email">Your Email</label>
+                            <label for="email">Your Email <span class="required">*</span></label>
                             <input
                                 type="email"
                                 id="email"
@@ -1439,24 +1445,80 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="service-type">Service Type <span class="required">*</span></label>
+                            <select
+                                id="service-type"
+                                name="service-type"
+                                required
+                                itemprop="serviceType"
+                            >
+                                <option value="">Select a service...</option>
+                                <option value="power-bi-dashboard">Power BI Dashboard</option>
+                                <option value="excel-dashboard">Excel Dashboard</option>
+                                <option value="data-cleaning-analysis">Data Cleaning & Analysis</option>
+                                <option value="sql-database-queries">SQL Database Queries</option>
+                                <option value="data-visualization-python">Data Visualization (Python)</option>
+                                <option value="machine-learning-models">Machine Learning Models</option>
+                                <option value="excel-automation">Excel Automation</option>
+                                <option value="website-development">Website Development</option>
+                                <option value="multiple-services">Multiple Services</option>
+                                <option value="consultation">Not Sure / Consultation</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group half-width">
+                                <label for="timeline">Project Timeline</label>
+                                <select
+                                    id="timeline"
+                                    name="timeline"
+                                    itemprop="timeline"
+                                >
+                                    <option value="">Select timeline...</option>
+                                    <option value="within-1-week">Within 1 week</option>
+                                    <option value="2-4-weeks">2-4 weeks</option>
+                                    <option value="1-2-months">1-2 months</option>
+                                    <option value="3-plus-months">3+ months</option>
+                                    <option value="flexible">Flexible</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group half-width">
+                                <label for="budget">Budget Range</label>
+                                <select
+                                    id="budget"
+                                    name="budget"
+                                    itemprop="budget"
+                                >
+                                    <option value="">Select budget...</option>
+                                    <option value="under-5000">Under ₹5,000</option>
+                                    <option value="5000-15000">₹5,000-₹15,000</option>
+                                    <option value="15000-30000">₹15,000-₹30,000</option>
+                                    <option value="30000-plus">₹30,000+</option>
+                                    <option value="lets-discuss">Let's discuss</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <label for="subject">Subject</label>
                             <input
                                 type="text"
                                 id="subject"
                                 name="subject"
-                                required
+                                placeholder="Brief description of your project"
                                 itemprop="description"
                             />
                         </div>
 
                         <div class="form-group">
-                            <label for="message">Your Message</label>
+                            <label for="message">Your Message <span class="required">*</span></label>
                             <textarea
                                 id="message"
                                 name="message"
                                 rows="5"
                                 required
-                                placeholder="Tell me about your project..."
+                                placeholder="Tell me about your project in detail... What data do you have? What insights are you looking for?"
                                 itemprop="text"
                             ></textarea>
                         </div>
