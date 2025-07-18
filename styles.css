@@ -1085,7 +1085,7 @@ p {
     .hero-content .subtitle {
         font-size: 1rem;
     }
-    .hero-content .description {
+    .hero-description {
         font-size: 0.9rem;
         line-height: 1.5;
     }
@@ -1797,4 +1797,75 @@ p {
     .footer-section ul li a {
         font-size: 0.85rem !important;
     }
+}
+
+/* Critical CSS optimizations and mobile performance enhancements */
+${
+    (() => {
+        const mobileOptimizations = `
+/* Mobile-specific optimizations */
+        .floating-element {
+            will-change: auto !important;
+            animation: none !important;
+            transform: translateZ(0) !important;
+        }
+        .project-card, .service-card {
+            will-change: auto;
+            transform: translateZ(0);
+        }
+        /* Simplify animations on mobile */
+        @media (max-width: 768px) {
+            * {
+                animation-duration: 0.1s !important;
+                transition-duration: 0.1s !important;
+                transform: translateZ(0) !important;
+            }
+            .hero-background {
+                display: none !important;
+            }
+            /* Eliminate white flash on mobile */
+            html, body {
+                background: #000000 !important;
+                overscroll-behavior: none !important;
+                -webkit-overflow-scrolling: touch !important;
+            }
+            /* Optimize scrolling performance */
+            .section {
+                transform: translateZ(0);
+                contain: layout style paint;
+            }
+        }
+`;
+        return `
+        /* Critical CSS for font loading */
+        .hero-content h1, .section-title {
+            font-display: swap;
+        }
+        /* Reduce layout shift and improve performance */
+        img {
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            contain: layout;
+        }
+        /* Prevent white flash and improve scrolling */
+        html, body {
+            background-color: #000000 !important;
+            background-attachment: fixed;
+            overscroll-behavior: none;
+        }
+        /* GPU acceleration for smoother scrolling */
+        * {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+        /* Optimize main containers */
+        .container, .section, .hero {
+            contain: layout style;
+            will-change: transform;
+        }
+        ${mobileOptimizations}
+`;
+    })()
 }
