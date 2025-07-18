@@ -16,11 +16,11 @@ function handleActiveNavigation(sections,navLinks){if(!sections||!navLinks)retur
 function setupAnimations(){const observerOptions={threshold:0.1,rootMargin:"0px 0px -50px 0px",};const observer=new IntersectionObserver(function(entries){entries.forEach((entry)=>{if(entry.isIntersecting){entry.target.classList.add("animate-in");if(entry.target.classList.contains("stagger-animation")){staggerChildAnimations(entry.target)}}})},observerOptions);const animatedElements=document.querySelectorAll(".project-card, .service-card, .skill-category",);animatedElements.forEach((el)=>{el.classList.add("animate-on-scroll");observer.observe(el)});optimizeImages()}
 function optimizeImages(){const images=document.querySelectorAll('img');const isMobile=isMobileDevice();const imageObserver=new IntersectionObserver((entries,observer)=>{entries.forEach(entry=>{if(entry.isIntersecting){const img=entry.target;if(img.dataset.src){img.src=img.dataset.src;img.removeAttribute('data-src')}
 img.style.opacity='1';observer.unobserve(img)}})},{rootMargin:isMobile?'50px 0px':'100px 0px',threshold:0.01});images.forEach(img=>{if(!img.hasAttribute('loading')){img.loading=isMobile?'lazy':'lazy'}
-img.decoding='async';img.style.opacity='1';img.style.transition='opacity 0.3s ease';if(img.closest('.hero')){img.fetchPriority='high';img.loading='eager';if(isMobile&&img.src.includes('images/')){img.style.maxHeight='300px';img.style.objectFit='cover'}}
-if(!isMobile&&'loading' in HTMLImageElement.prototype&&img.src.includes('.png')){const canvas=document.createElement('canvas');const webpSupport=canvas.toDataURL('image/webp').indexOf('webp')>-1;if(webpSupport&&!img.src.includes('webp')){console.log('WebP supported but not implemented for:',img.src)}}
-img.onerror=function(){if(!isMobile){console.warn('Failed to load image:',this.src)}
-this.style.backgroundColor='#1a1a2e';this.style.minHeight=isMobile?'150px':'200px'};if(img.src){img.dataset.originalSrc=img.src}
-if(!img.closest('.hero')&&img.dataset.src){imageObserver.observe(img)}})}
+img.decoding='async';img.style.opacity='1';img.style.transition='opacity 0.3s ease';img.style.transform='translateZ(0)';img.style.contain='layout';// Prevent layout shifts
+if(!img.style.width&&!img.style.height){img.style.aspectRatio='16/10';img.style.width='100%';img.style.height='auto'}
+if(img.closest('.hero')){img.fetchPriority='high';img.loading='eager';if(isMobile&&img.src.includes('images/')){img.style.maxHeight='300px';img.style.objectFit='cover'}}
+img.onerror=function(){this.style.backgroundColor='#1a1a2e';this.style.minHeight=isMobile?'150px':'200px';this.style.display='block'};if(img.src){img.dataset.originalSrc=img.src}
+if(!img.closest('.hero')&&img.dataset.src){imageObserver.observe(img)}})};
 function triggerEntranceAnimations(){const heroContent=document.querySelector(".hero-content");if(heroContent){heroContent.classList.add("animate-in")}}
 function setupPageSpecificAnimations(){if(document.querySelector(".hero-content")){triggerEntranceAnimations()}}
 function staggerChildAnimations(parent){const children=parent.children;Array.from(children).forEach((child,index)=>{setTimeout(()=>{child.classList.add("animate-in")},index*100)})}
