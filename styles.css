@@ -1,16 +1,16 @@
 :root {
-    --primary-color: #6c63ff;
-    --secondary-color: #00d4ff;
+    --primary-color: #00d4ff;
+    --secondary-color: #00ffff;
     --accent-color: #ff6b6b;
-    --dark-bg: #0a0a0a;
-    --dark-secondary: #1a1a2e;
-    --dark-tertiary: #16213e;
+    --dark-bg: #000000;
+    --dark-secondary: #0a0a0a;
+    --dark-tertiary: #111111;
     --light-text: #e0e6ed;
     --muted-text: #c0c7d0;
-    --border-color: rgba(255, 255, 255, 0.1);
+    --border-color: rgba(0, 212, 255, 0.1);
     --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     --gradient-bg: linear-gradient(135deg, var(--dark-bg) 0%, var(--dark-secondary) 50%, var(--dark-tertiary) 100%);
-    --shadow-light: 0 5px 20px rgba(108, 99, 255, 0.2);
+    --shadow-light: 0 5px 20px rgba(0, 212, 255, 0.2);
     --shadow-heavy: 0 25px 50px rgba(0, 0, 0, 0.4);
     --transition: all 0.3s ease;
     --border-radius: 12px;
@@ -19,11 +19,11 @@
     --max-width: 1200px;
 }
 .dark {
-    --primary-color: #8b7fff;
-    --secondary-color: #20e3ff;
+    --primary-color: #00d4ff;
+    --secondary-color: #00ffff;
     --dark-bg: #000000;
-    --dark-secondary: #111125;
-    --dark-tertiary: #0f1424;
+    --dark-secondary: #0a0a0a;
+    --dark-tertiary: #111111;
 }
 * {
     margin: 0;
@@ -102,7 +102,7 @@ p {
 }
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 15px 35px rgb(108 99 255 / 0.4);
+    box-shadow: 0 15px 35px rgb(0 212 255 / 0.4);
 }
 .btn-secondary {
     background: #fff0;
@@ -607,18 +607,18 @@ p {
 }
 .skill-tag,
 .tech-tag {
-    background: rgb(108 99 255 / 0.2);
+    background: rgb(0 212 255 / 0.2);
     color: var(--light-text);
     padding: 6px 14px;
     border-radius: 20px;
     font-size: 0.9rem;
     font-weight: 500;
-    border: 1px solid rgb(108 99 255 / 0.4);
+    border: 1px solid rgb(0 212 255 / 0.4);
     transition: var(--transition);
 }
 .skill-tag:hover,
 .tech-tag:hover {
-    background: rgb(108 99 255 / 0.4);
+    background: rgb(0 212 255 / 0.4);
     transform: translateY(-2px);
 }
 .project-card {
@@ -786,8 +786,8 @@ p {
 .social-link {
     width: 50px;
     height: 50px;
-    background: rgb(108 99 255 / 0.2);
-    border: 2px solid rgb(108 99 255 / 0.4);
+    background: rgb(0 212 255 / 0.2);
+    border: 2px solid rgb(0 212 255 / 0.4);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -906,7 +906,7 @@ p {
 }
 .back-to-top:hover {
     transform: translateY(-3px);
-    box-shadow: 0 15px 35px rgb(108 99 255 / 0.4);
+    box-shadow: 0 15px 35px rgb(0 212 255 / 0.4);
 }
 @media (max-width: 1024px) {
     .project-card {
