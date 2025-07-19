@@ -97,7 +97,11 @@ function staggerChildAnimations(parent){const children=parent.children;Array.fro
 function setupContactForm(){const form=document.getElementById("contact-form");if(!form)return;const submitButton=form.querySelector('button[type="submit"]');if(!submitButton)return;setupEmailDomainValidation();form.addEventListener("submit",function(e){e.preventDefault();handleFormSubmission(form,submitButton)});setupFormValidation(form)}
 function setupEmailDomainValidation(){const allowedDomains=["gmail.com","yahoo.com","outlook.com","hotmail.com","protonmail.com","icloud.com",];const emailInput=document.getElementById("email")||document.getElementById("index-email");const warning=document.getElementById("email-warning")||document.getElementById("index-email-warning");const form=document.getElementById("contact-form");if(!emailInput||!warning||!form)return;emailInput.addEventListener("input",function(){const email=emailInput.value;const domain=email.substring(email.lastIndexOf("@")+1);if(email&&!allowedDomains.includes(domain)){warning.style.display="block";emailInput.setCustomValidity("Invalid email domain.")}else{warning.style.display="none";emailInput.setCustomValidity("")}});form.addEventListener("submit",function(e){const email=emailInput.value;const domain=email.substring(email.lastIndexOf("@")+1);if(email&&!allowedDomains.includes(domain)){e.preventDefault();warning.style.display="block";showNotification("Submission blocked: Only trusted email domains allowed.","error",);return!1}})}
 function handleFormSubmission(form,submitButton){const originalText=submitButton.innerHTML;const formData=new FormData(form);if(!validateForm(form)){showNotification("Please fill in all required fields correctly.","error",);return}
-submitButton.innerHTML='<i class="fas fa-spinner fa-spin"></i> Sending...';submitButton.disabled=!0;fetch(form.action,{method:"POST",body:formData,headers:{Accept:"application/json",},}).then((response)=>{if(response.ok){showNotification("Message sent successfully! I'll get back to you soon.","success",);form.reset()}else{throw new Error("Network response was not ok")}}).catch((error)=>{console.error("Error:",error);showNotification("There was a problem sending your message. Please try again later.","error",)}).finally(()=>{submitButton.innerHTML=originalText;submitButton.disabled=!1})}
+submitButton.innerHTML='<i class="fas fa-spinner fa-spin"></i> Sending...';submitButton.disabled=!0;fetch(form.action,{method:"POST",body:formData,headers:{Accept:"application/json",},}).then((response)=>{if(response.ok){showNotification("Message sent successfully! I'll get back to you soon.","success",);form.reset();
+// Smooth scroll to top to show the notification
+window.scrollTo({top:0,behavior:"smooth"});}else{throw new Error("Network response was not ok")}}).catch((error)=>{console.error("Error:",error);showNotification("There was a problem sending your message. Please try again later.","error",);
+// Also scroll to top for error notifications
+window.scrollTo({top:0,behavior:"smooth"});}).finally(()=>{submitButton.innerHTML=originalText;submitButton.disabled=!1})}
 function setupFormValidation(form){const inputs=form.querySelectorAll("input, textarea");inputs.forEach((input)=>{input.addEventListener("blur",function(){validateField(this)});input.addEventListener("input",function(){clearFieldError(this)})})}
 function validateForm(form){const inputs=form.querySelectorAll("input[required], textarea[required]");let isValid=!0;inputs.forEach((input)=>{if(!validateField(input)){isValid=!1}});return isValid}
 function validateField(field){const value=field.value.trim();const fieldType=field.type;let isValid=!0;let errorMessage="";if(field.hasAttribute("required")&&!value){isValid=!1;errorMessage="This field is required."}
@@ -107,13 +111,21 @@ if(!isValid){showFieldError(field,errorMessage)}else{clearFieldError(field)}
 return isValid}
 function showFieldError(field,message){clearFieldError(field);field.classList.add("error");const errorElement=document.createElement("span");errorElement.className="field-error";errorElement.textContent=message;field.parentNode.appendChild(errorElement)}
 function clearFieldError(field){field.classList.remove("error");const existingError=field.parentNode.querySelector(".field-error");if(existingError){existingError.remove()}}
-function showNotification(message,type="info"){const notification=document.createElement("div");notification.className=`notification notification-${type}`;notification.innerHTML=`
+function showNotification(message,type="info"){const notification=document.createElement("div");notification.className=`notification notification-${type}`;
+// Check if we're on index.html and if the form is the index contact form
+const isIndexForm=window.location.pathname.includes('index.html')||window.location.pathname==='/'||window.location.pathname==='';const indexForm=document.getElementById('index-contact-form');
+if(isIndexForm&&indexForm){
+// Position notification above the form on index page
+notification.style.position='absolute';notification.style.top='auto';notification.style.bottom='100%';notification.style.right='20px';notification.style.marginBottom='10px';notification.style.zIndex='10000';indexForm.style.position='relative';indexForm.appendChild(notification);}else{
+// Default fixed position for other pages
+document.body.appendChild(notification);}
+notification.innerHTML=`
         <div class="notification-content">
             <i class="fas fa-${getNotificationIcon(type)}"></i>
             <span>${message}</span>
         </div>
         <button class="notification-close">&times;</button>
-    `;document.body.appendChild(notification);setTimeout(()=>notification.classList.add("show"),100);setTimeout(()=>hideNotification(notification),5000);notification.querySelector(".notification-close").addEventListener("click",()=>{hideNotification(notification)})}
+    `;setTimeout(()=>notification.classList.add("show"),100);setTimeout(()=>hideNotification(notification),5000);notification.querySelector(".notification-close").addEventListener("click",()=>{hideNotification(notification)})}
 function hideNotification(notification){notification.classList.add("hide");setTimeout(()=>{if(notification.parentNode){notification.parentNode.removeChild(notification)}},300)}
 function getNotificationIcon(type){const icons={success:"check-circle",error:"exclamation-circle",warning:"exclamation-triangle",info:"info-circle",};return icons[type]||icons.info}
 function setupBackToTop(){const backToTopButton=document.getElementById("back-to-top");if(!backToTopButton)return;const throttledScrollHandler=throttle(function(){if(window.scrollY>300){backToTopButton.classList.add("visible")}else{backToTopButton.classList.remove("visible")}},16);window.addEventListener("scroll",throttledScrollHandler);backToTopButton.addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth",})})}
