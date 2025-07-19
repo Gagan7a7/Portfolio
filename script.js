@@ -184,7 +184,7 @@ function initializePerformanceOptimizations(){preventForcedReflows();optimizeNet
 function enableResourceHints(){const hints=[{rel:'dns-prefetch',href:'https://www.googletagmanager.com'},{rel:'preconnect',href:'https://fonts.googleapis.com'},{rel:'preconnect',href:'https://fonts.gstatic.com',crossOrigin:'anonymous'}];hints.forEach(hint=>{const link=document.createElement('link');link.rel=hint.rel;link.href=hint.href;if(hint.crossOrigin)link.crossOrigin=hint.crossOrigin;document.head.appendChild(link)})}
 function optimizeThirdPartyScripts(){const scripts=document.querySelectorAll('script[src]');scripts.forEach(script=>{if(script.src.includes('googletagmanager')||script.src.includes('gtag')){script.async=!0;script.defer=!0;script.setAttribute('importance','low')}})}
 function setupPerformanceMonitoring(){if('web-vital' in window||typeof webVitals!=='undefined'){return}
-window.addEventListener('load',()=>{if(performance.timing){const loadTime=performance.timing.loadEventEnd-performance.timing.navigationStart;console.log(`Page load time: ${loadTime}ms`)}})}
+window.addEventListener('load',()=>{if(performance.timing){const loadEnd=performance.timing.loadEventEnd;const navStart=performance.timing.navigationStart;if(loadEnd>0&&navStart>0&&loadEnd>navStart){const loadTime=loadEnd-navStart;console.log(`Page load time: ${loadTime}ms`)}}})}
 if(document.readyState==='loading'){document.addEventListener("DOMContentLoaded",initializePerformanceOptimizations)}else{initializePerformanceOptimizations()}
 function setupResumeModal(){const resumeModal=document.getElementById("resume-modal");const closeResumeButton=document.getElementById("close-resume");if(!resumeModal){return}
 if(!closeResumeButton){return}
