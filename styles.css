@@ -292,6 +292,7 @@ p {
         top: 0;
         right: -100%;
         height: 100vh;
+        height: 100dvh; /* Use dynamic viewport height for better mobile support */
         width: 280px;
         background: rgb(10 10 20 / 0.98);
         backdrop-filter: blur(20px);
@@ -303,9 +304,23 @@ p {
         border-left: 1px solid var(--border-color);
         z-index: 1000;
         will-change: transform;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
     }
     .nav-links.active {
         right: 0;
+    }
+    
+    /* Prevent background scrolling when menu is open */
+    body.menu-open {
+        overflow: hidden !important;
+        position: fixed !important;
+        width: 100% !important;
+        height: 100% !important;
+        touch-action: none !important;
+        -webkit-overflow-scrolling: auto !important;
     }
     .nav-links a {
         padding: 15px 25px;
