@@ -5,7 +5,7 @@ const passiveIfSupported=supportsPassive()?{passive:!0}:!1;function supportsPass
 return supportsPassive}
 function initializePortfolio(){const fragment=document.createDocumentFragment();try{handleLoading();setupNavigation();setupScrollEffects();setupAnimations();setupContactForm();setupBackToTop();setupThemeHandling();const resumeModal=document.getElementById("resume-modal");if(resumeModal){try{setupResumeModal()}catch(error){console.warn('Resume modal setup failed:',error)}}
 const typewriterElement=document.querySelector(".typewriter-text");if(typewriterElement){const shouldRunTypewriter=optimizeForMobile();if(shouldRunTypewriter!==!1){requestAnimationFrame(()=>{setTimeout(initTypewriter,isMobileDevice()?1000:500)})}}}catch(error){console.warn('Portfolio initialization error:',error)}}
-function handleLoading(){const loader=document.getElementById("loader");window.addEventListener("load",function(){setTimeout(function(){if(loader)loader.classList.add("hidden");setupPageSpecificAnimations()},1200)})}
+function handleLoading(){const loader=document.getElementById("loader");let hasLoaded=sessionStorage.getItem('portfolioLoaded');if(hasLoaded){if(loader)loader.style.display='none';setupPageSpecificAnimations();return}window.addEventListener("load",function(){setTimeout(function(){if(loader){loader.classList.add("hidden");sessionStorage.setItem('portfolioLoaded','true')}setupPageSpecificAnimations()},1200)})}
 function setupNavigation(){
     const mobileMenu=document.getElementById("mobile-menu");
     const navLinks=document.getElementById("nav-links");
