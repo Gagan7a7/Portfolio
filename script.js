@@ -6,9 +6,79 @@ return supportsPassive}
 function initializePortfolio(){const fragment=document.createDocumentFragment();try{handleLoading();setupNavigation();setupScrollEffects();setupAnimations();setupContactForm();setupBackToTop();setupThemeHandling();const resumeModal=document.getElementById("resume-modal");if(resumeModal){try{setupResumeModal()}catch(error){console.warn('Resume modal setup failed:',error)}}
 const typewriterElement=document.querySelector(".typewriter-text");if(typewriterElement){const shouldRunTypewriter=optimizeForMobile();if(shouldRunTypewriter!==!1){requestAnimationFrame(()=>{setTimeout(initTypewriter,isMobileDevice()?1000:500)})}}}catch(error){console.warn('Portfolio initialization error:',error)}}
 function handleLoading(){const loader=document.getElementById("loader");window.addEventListener("load",function(){setTimeout(function(){if(loader)loader.classList.add("hidden");setupPageSpecificAnimations()},1200)})}
-function setupNavigation(){const mobileMenu=document.getElementById("mobile-menu");const navLinks=document.getElementById("nav-links");const header=document.getElementById("header");if(!mobileMenu||!navLinks||!header)return;mobileMenu.addEventListener("click",function(){toggleMobileMenu(mobileMenu,navLinks)});const navLinkItems=navLinks.querySelectorAll("a");navLinkItems.forEach((link)=>{link.addEventListener("click",function(){closeMobileMenu(mobileMenu,navLinks)})});document.addEventListener("click",function(event){const isClickInsideNav=mobileMenu.contains(event.target)||navLinks.contains(event.target);if(!isClickInsideNav&&navLinks.classList.contains("active")){closeMobileMenu(mobileMenu,navLinks)}});setupSmoothScrolling()}
-function toggleMobileMenu(menuButton,navLinks){menuButton.classList.toggle("active");navLinks.classList.toggle("active");const expanded=menuButton.getAttribute("aria-expanded")==="true"||!1;menuButton.setAttribute("aria-expanded",!expanded);document.body.style.overflow=navLinks.classList.contains("active")?"hidden":""}
-function closeMobileMenu(menuButton,navLinks){menuButton.classList.remove("active");navLinks.classList.remove("active");menuButton.setAttribute("aria-expanded","false");document.body.style.overflow=""}
+function setupNavigation(){
+    const mobileMenu=document.getElementById("mobile-menu");
+    const navLinks=document.getElementById("nav-links");
+    const header=document.getElementById("header");
+    if(!mobileMenu||!navLinks||!header)return;
+    
+    mobileMenu.addEventListener("click",function(){toggleMobileMenu(mobileMenu,navLinks)});
+    
+    const navLinkItems=navLinks.querySelectorAll("a");
+    navLinkItems.forEach((link)=>{
+        link.addEventListener("click",function(){closeMobileMenu(mobileMenu,navLinks)})
+    });
+    
+    document.addEventListener("click",function(event){
+        const isClickInsideNav=mobileMenu.contains(event.target)||navLinks.contains(event.target);
+        if(!isClickInsideNav&&navLinks.classList.contains("active")){
+            closeMobileMenu(mobileMenu,navLinks)
+        }
+    });
+    
+    // Prevent touch scrolling on background when menu is open
+    document.addEventListener('touchmove', function(e) {
+        if (document.body.classList.contains('menu-open')) {
+            // Allow scrolling within the nav menu
+            if (!navLinks.contains(e.target)) {
+                e.preventDefault();
+            }
+        }
+    }, { passive: false });
+    
+    setupSmoothScrolling()
+}
+function toggleMobileMenu(menuButton,navLinks){
+    menuButton.classList.toggle("active");
+    navLinks.classList.toggle("active");
+    const expanded=menuButton.getAttribute("aria-expanded")==="true"||!1;
+    menuButton.setAttribute("aria-expanded",!expanded);
+    
+    if(navLinks.classList.contains("active")){
+        // Store current scroll position
+        const scrollY = window.scrollY;
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${scrollY}px`;
+        document.body.style.width = '100%';
+        document.body.classList.add('menu-open');
+    } else {
+        // Restore scroll position
+        const scrollY = document.body.style.top;
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        document.body.classList.remove('menu-open');
+        if(scrollY) {
+            window.scrollTo(0, parseInt(scrollY || '0') * -1);
+        }
+    }
+}
+
+function closeMobileMenu(menuButton,navLinks){
+    menuButton.classList.remove("active");
+    navLinks.classList.remove("active");
+    menuButton.setAttribute("aria-expanded","false");
+    
+    // Restore scroll position
+    const scrollY = document.body.style.top;
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    document.body.classList.remove('menu-open');
+    if(scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+    }
+}
 function setupSmoothScrolling(){document.querySelectorAll('a[href^="#"]').forEach((anchor)=>{anchor.addEventListener("click",function(e){e.preventDefault();const target=document.querySelector(this.getAttribute("href"));if(target){const headerOffset=80;const elementPosition=target.getBoundingClientRect().top;const offsetPosition=elementPosition+window.pageYOffset-headerOffset;window.scrollTo({top:offsetPosition,behavior:"smooth",})}})})}
 function setupScrollEffects(){const header=document.getElementById("header");const sections=document.querySelectorAll(".section");const navLinks=document.querySelectorAll(".nav-links a");if(!header)return;let ticking=!1;let lastScrollY=0;const scrollHandler=function(){const currentScrollY=window.scrollY;if(Math.abs(currentScrollY-lastScrollY)<3)return;if(!ticking){requestAnimationFrame(function(){handleHeaderScroll(header);handleActiveNavigation(sections,navLinks);lastScrollY=currentScrollY;ticking=!1});ticking=!0}};if(supportsPassive()){window.addEventListener("scroll",scrollHandler,{passive:!0})}else{window.addEventListener("scroll",scrollHandler)}}
 function handleHeaderScroll(header){if(window.scrollY>50){header.classList.add("scrolled")}else{header.classList.remove("scrolled")}}
